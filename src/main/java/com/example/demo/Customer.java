@@ -1,14 +1,25 @@
 package com.example.demo;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Entity
+// import javax.persistence.Entity;
+
+// @Entity
 public class Customer {
 
-    @id
-    @GeneratedValue(strategy=GenerationType.identity)
+    // @Id
+    // @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private String name;
+
+    public Customer() {}
+
+    public Customer(String name){
+        this.name = name;
+    }
 
     public Customer(long id, String name){
         this.id = id;
@@ -19,7 +30,7 @@ public class Customer {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
