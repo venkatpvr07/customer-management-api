@@ -27,22 +27,22 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Customer> getCustomerById(@PathVariable long id) {
-        return Optional.of(service.getCustomerById(id));
+    public Optional<Customer> getCustomerById(@PathVariable Long id) {
+        return service.getCustomerById(id);
     }
 
     @PostMapping()
-    public void createCustomer(@RequestBody Customer newCustomer) {
-        service.createCustomer(newCustomer);
+    public Customer createCustomer(@RequestBody Customer newCustomer) {
+        return service.createCustomer(newCustomer);
     }
 
     @PutMapping("/{id}")
-    public List<Customer> updateCustomer(@PathVariable long id, @RequestBody Customer newCustomer) {
+    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer newCustomer) {
         return service.updateCustomer(id, newCustomer);
     }
 
     @DeleteMapping("/{id}")
-    public List<Customer> deleteCustomer(@PathVariable long id) {
-        return service.deleteCustomer(id);
+    public void deleteCustomer(@PathVariable Long id) {
+        service.deleteCustomer(id);
     }
 }

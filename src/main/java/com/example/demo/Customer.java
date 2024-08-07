@@ -7,12 +7,12 @@ import jakarta.persistence.Id;
 
 // import javax.persistence.Entity;
 
-// @Entity
+@Entity
 public class Customer {
 
-    // @Id
-    // @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
     private String name;
 
     public Customer() {}
@@ -21,12 +21,12 @@ public class Customer {
         this.name = name;
     }
 
-    public Customer(long id, String name){
+    public Customer(Long id, String name){
         this.id = id;
         this.name = name;
     }
 
-    public long getId(){
+    public Long getId(){
         return this.id;
     }
 
