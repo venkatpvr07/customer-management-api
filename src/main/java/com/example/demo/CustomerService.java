@@ -80,7 +80,7 @@ public class CustomerService {
         if(payment_amount>0){
             Optional<Customer> customer = repo.findById(id);
             Customer current_customer = customer.get();
-            if(customer.isPresent() && payment_amount >= current_customer.getBalanceDue()) {
+            if(customer.isPresent() && payment_amount <= current_customer.getBalanceDue()) {
                 double updated_balance = current_customer.getBalanceDue() - payment_amount;
                 current_customer.setBalanceDue(updated_balance);
                 return repo.save(current_customer);

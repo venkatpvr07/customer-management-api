@@ -23,9 +23,11 @@ public class Customer {
         this.name = name;
     }
 
-    public Customer(Long id, String name){
+    public Customer(Long id, String name, Double sales, Double balance){
         this.id = id;
         this.name = name;
+        this.balance_due = balance;
+        this.total_sales = sales;
     }
 
     public Long getId(){

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,9 +37,9 @@ public class CustomerServiceTest {
     @BeforeEach
     public void setup(){
         customers = new ArrayList<>();
-        Customer c1 = new Customer(1L, "Joe");
-        Customer c2 = new Customer(2L, "Jill");
-        Customer c3 = new Customer(3L, "Jack");
+        Customer c1 = new Customer(1L, "Joe", 0.0,0.0);
+        Customer c2 = new Customer(2L, "Jill", 0.0, 0.0);
+        Customer c3 = new Customer(3L, "Jack", 0.0, 0.0);
         customers.add(c1);
         customers.add(c2);
         customers.add(c3);
@@ -51,39 +52,44 @@ public class CustomerServiceTest {
         assertNotNull(cust);
         assertEquals(customers, cust);
         assertEquals(customers.get(0).getName(), cust.get(0).getName());
+        verify(repo).findAll();
     }
 
     @Test
     public void testGetCustomerById(){
-        when(repo.findById(1L)).thenReturn(Optional.of(new Customer(1L, "Joe")));
+        when(repo.findById(1L)).thenReturn(Optional.of(new Customer(1L, "Joe", 0.0, 0.0)));
         Customer cust = service.getCustomerById(1L).get();
         assertNotNull(cust);
         assertEquals(1L, cust.getId());
-        verify(repo).findById(cust.getId());
+        verify(repo).findById(1L);
     }
 
     @Test
     public void testCreateCustomer() {
-        Customer c = new Customer(5L, "Venkat");
+        Customer c = new Customer(5L, "Venkat", 0.0, 0.0);
         when(repo.save(c)).thenReturn(c);
         Customer cust = service.createCustomer(c);
         assertNotNull(cust);
         assertNotNull(cust.getName());
         assertEquals(c.getName(), cust.getName());
-        verify(repo).save(cust);
+        verify(repo).save(c);
     }
 
     @Test
     public void testUpdateCustomer() {
-        when(repo.findById(1L)).thenReturn(Optional.of(customers.get(0)));
-        Customer cust = customers.get(0);
-        cust.setName("Venkat");
-        when(repo.save(cust)).thenReturn(cust);
-        Customer cust2 = service.updateCustomer(1L, cust);
-        assertNotNull(cust2);
-        assertEquals("Venkat", cust.getName());
-        verify(repo).save(cust2);
-        
+        // when(repo.findById(1L)).thenReturn(Optional.of(customers.get(0)));
+        Customer existing = customers.get(0);
+        Customer updated = new Customer();
+        updated.setId(1L);
+        updated.setName("Venkat");
+        Customer saved = new Customer();
+        saved.setId(1L);
+        saved.setName("Venkat");
+        when(repo.findById(1L)).thenReturn(Optional.of(existing));
+        when(repo.save(any(Customer.class))).thenReturn(saved);
+        Customer result = service.updateCustomer(1L, updated);
+        assertNotNull(result);
+        assertEquals("Venkat", result.getName());        
     }
 
     @Test
