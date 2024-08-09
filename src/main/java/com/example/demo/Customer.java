@@ -53,7 +53,7 @@ public class Customer {
     }
 
     public double getBalanceDue(){
-        return this.total_sales;
+        return this.balance_due;
     }
 
     public void setBalanceDue(double balance_due) {

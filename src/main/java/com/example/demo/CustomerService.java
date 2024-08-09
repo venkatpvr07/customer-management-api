@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exceptions.CustomException;
+
 @Service
 public class CustomerService {
     @Autowired private CustomerRepository repo;
@@ -48,6 +50,9 @@ public class CustomerService {
                 return repo.save(current_customer);
             }
         }
+        else{
+            throw new CustomException("Purchase amount cannot be negative", "NEGATIVE_AMOUNT");
+        }
         return null;
     }
 
@@ -64,6 +69,9 @@ public class CustomerService {
                 return repo.save(current_customer);
             }
         }
+        else{
+        throw new CustomException("Purchase amount cannot be negative", "NEGATIVE_AMOUNT");
+        }
         return null;
     } 
 
@@ -71,13 +79,18 @@ public class CustomerService {
     public Customer payment(Long id, double payment_amount) {
         if(payment_amount>0){
             Optional<Customer> customer = repo.findById(id);
-            if(customer.isPresent()) {
-                Customer current_customer = customer.get();
+            Customer current_customer = customer.get();
+            if(customer.isPresent() && payment_amount >= current_customer.getBalanceDue()) {
                 double updated_balance = current_customer.getBalanceDue() - payment_amount;
                 current_customer.setBalanceDue(updated_balance);
                 return repo.save(current_customer);
             }
+            else {
+                throw new CustomException("Purchase amount cannot be negative", "NEGATIVE_AMOUNT");
+            }
         }
-        return null;
+        else{
+            throw new CustomException("Payment amount cannot be greater than balance due", "NEGATIVE_BALANCE");
+        }
     }
 }

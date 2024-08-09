@@ -49,17 +49,17 @@ public class CustomerController {
     }
 
     @PostMapping("/{id}/purchase")
-    public Customer purchase(@PathVariable Long id, @RequestBody double purchase_amount) {
+    public Customer purchase(@PathVariable Long id, @RequestBody Double purchase_amount) {
         return service.purchase(id, purchase_amount);
     }
 
     @PostMapping("/{id}/purchase-credit")
-    public Customer purchaseWithCredit(@PathVariable Long id, @RequestBody double purchase_amount) {
+    public Customer purchaseWithCredit(@PathVariable Long id, @RequestBody Double purchase_amount) {
         return service.purchaseWithCredit(id, purchase_amount);
     }
 
     @PostMapping("/{id}/payment")
-    public Customer payBalance(@PathVariable Long id, @RequestBody double payment_amount) {
+    public Customer payBalance(@PathVariable Long id, @RequestBody Double payment_amount) {
         return service.payment(id, payment_amount);
     }
 }
