@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import com.example.demo.CustomerService;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin(origins = "*")
 public class CustomerController {
     
     @Autowired
@@ -44,5 +46,20 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public void deleteCustomer(@PathVariable Long id) {
         service.deleteCustomer(id);
+    }
+
+    @PostMapping("/{id}/purchase")
+    public Customer purchase(@PathVariable Long id, @RequestBody double purchase_amount) {
+        return service.purchase(id, purchase_amount);
+    }
+
+    @PostMapping("/{id}/purchase-credit")
+    public Customer purchaseWithCredit(@PathVariable Long id, @RequestBody double purchase_amount) {
+        return service.purchaseWithCredit(id, purchase_amount);
+    }
+
+    @PostMapping("/{id}/payment")
+    public Customer payBalance(@PathVariable Long id, @RequestBody double payment_amount) {
+        return service.payment(id, payment_amount);
     }
 }

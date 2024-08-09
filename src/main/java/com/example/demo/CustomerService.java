@@ -5,56 +5,25 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomerService {
     @Autowired private CustomerRepository repo;
-    // public List<Customer> customersList = new ArrayList<>();
-    // Customer c1 = new Customer(1,"John Doe");
-    // Customer c2 = new Customer(2,"Jane Adams");
-    // Customer c3 = new Customer(3,"Alice Jones");
-    //     // customersList.add(c1);
-    //     // customersList.add(c2);
-    //     // customersList.add(c3);
-    
-    // public CustomerService(){
-    //     customersList.add(c1);
-    //     customersList.add(c2);
-    //     customersList.add(c3);
-    // }
 
     public List<Customer> getCustomers() {
         return repo.findAll();
     }
 
     public Optional<Customer> getCustomerById(Long id) {
-        // for(int i=0;i<customersList.size();i++) {
-        //     if(customersList.get(i).getId() == id) {
-        //         return customersList.get(i);
-        //     }
-        // }
-        // return null;
         return repo.findById(id);
     }
 
     public Customer createCustomer(Customer newCustomer) {
-        // customersList.add(newCustomer);
         return repo.save(newCustomer);
     }
 
     public Customer updateCustomer(Long id, Customer customer) {
-        // for(int i=0;i<customersList.size();i++) {
-        //     if(customersList.get(i).getId() == id) {
-        //         // customersList.setName(customer.getName());
-        //         // customersList.remove(i);
-        //         Customer updatedCustomer = new Customer();
-        //         updatedCustomer.setId(id);
-        //         updatedCustomer.setName(customer.getName());
-        //         customersList.remove(i);
-        //         customersList.add(i,updatedCustomer);
-        //         break;
-        //     }
-        // }
         Optional<Customer> currentCustomer = repo.findById(id);
         if(currentCustomer.isPresent()) {
             Customer updatedCustomer = currentCustomer.get();
@@ -65,12 +34,50 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long id) {
-        // for(int i=0;i<customersList.size();i++) {
-        //     if(customersList.get(i).getId() == id) {
-        //         customersList.remove(i);
-        //         break;
-        //     }
-        // }
         repo.deleteById(id);
+    }
+
+    @Transactional
+    public Customer purchase(Long id, double purchase_amount) {
+        if(purchase_amount>0){
+            Optional<Customer> customer = repo.findById(id);
+            if(customer.isPresent()) {
+                Customer current_customer = customer.get();
+                double updated_sales = current_customer.getTotalSales() + purchase_amount;
+                current_customer.setTotalSales(updated_sales);
+                return repo.save(current_customer);
+            }
+        }
+        return null;
+    }
+
+    @Transactional
+    public Customer purchaseWithCredit(Long id, double purchase_amount) {
+        if(purchase_amount>0){
+            Optional<Customer> customer = repo.findById(id);
+            if(customer.isPresent()) {
+                Customer current_customer = customer.get();
+                double updated_sales = current_customer.getTotalSales() + purchase_amount;
+                double updated_balance = current_customer.getBalanceDue() + purchase_amount;
+                current_customer.setTotalSales(updated_sales);
+                current_customer.setBalanceDue(updated_balance);
+                return repo.save(current_customer);
+            }
+        }
+        return null;
+    } 
+
+    @Transactional
+    public Customer payment(Long id, double payment_amount) {
+        if(payment_amount>0){
+            Optional<Customer> customer = repo.findById(id);
+            if(customer.isPresent()) {
+                Customer current_customer = customer.get();
+                double updated_balance = current_customer.getBalanceDue() - payment_amount;
+                current_customer.setBalanceDue(updated_balance);
+                return repo.save(current_customer);
+            }
+        }
+        return null;
     }
 }
